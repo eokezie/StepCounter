@@ -8,7 +8,11 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Hello World!</Text>
-      <RingProgress progress={0.8} />
+      <RingProgress 
+        progress={0.5}
+        strokeWidth={40}
+        radius={150}
+      />
       <View style={styles.valueMain}>
         <Values label={'Steps'} value={'1219'} />
         <Values label={'Distance'} value={'7.75 km'} />

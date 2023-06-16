@@ -1,11 +1,13 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
-import SVG, { Circle } from 'react-native-svg';
+import SVG, { Circle, CircleProps } from 'react-native-svg';
 import Animated, {
     useAnimatedProps, 
     useSharedValue,
     withTiming
 } from "react-native-reanimated";
+import { AntDesign } from '@expo/vector-icons';
+
 
 type TRingProps = {
     radius?: number;
@@ -25,6 +27,17 @@ const RingProgress = ({ radius = 100, strokeWidth=40, progress }: TRingProps) =>
     const animatedProps = useAnimatedProps(() => ({
         strokeDasharray: [circumference * fillAmount.value, circumference]
     }))
+
+    const defaultProps: CircleProps = {
+        cx:radius,
+        cy:radius,
+        r:innerRadius,
+        originX:radius,
+        originY:radius,
+        stroke:color,
+        strokeWidth:strokeWidth,
+        strokeLinecap:"round"
+    }
     
     React.useEffect(() => {
         fillAmount.value = withTiming(progress, { duration: 1500 });
@@ -39,27 +52,26 @@ const RingProgress = ({ radius = 100, strokeWidth=40, progress }: TRingProps) =>
            <SVG>
                 {/* Bacground */}
                 <Circle
-                    cx={radius}
-                    cy={radius}
-                    r={innerRadius}
-                    stroke={color}
-                    strokeWidth={strokeWidth}
-                    opacity={0.2}
+                    {...defaultProps}
+                    opacity={0.4}
                 />
                 {/* Foreground */}
                 <AnimatedCircle
-                    cx={radius}
-                    cy={radius}
-                    r={innerRadius}
-                    originX={radius}
-                    originY={radius}
                     animatedProps={animatedProps}
-                    stroke={color}
-                    strokeWidth={strokeWidth}
-                    strokeLinecap="round"
                     rotation='-90'
+                    {...defaultProps}
                 />
-           </SVG>
+            </SVG>
+            <AntDesign 
+                name="arrowright"
+                size={strokeWidth * 0.8}
+                color={'black'}
+                style={{
+                    position: 'absolute',
+                    alignSelf: 'center',
+                    top: strokeWidth * 0.1
+                }}
+            />
         </View>
     )
 }

@@ -31,18 +31,28 @@ const useHealthData = (date: Date) => {
    * Generating native codes for ios
    * npx expo prebuild --platform ios
    */
-    // @ts-ignore
-    if (Platform === 'ios') {
-      AppleHealthKit.initHealthKit(permissions, (error) => {
-        if (error) {
-          console.log('Error getting permissions');
-          return;
+    if (Platform.OS !== 'ios') {
+        return
+    };
+    
+    AppleHealthKit.isAvailable((err, isAvailable) => {
+        if (err) {
+            console.log('Error checking availability')
+            return
+        };
+        if (!isAvailable) {
+            console.log('Apple Health is not available')
+            return
         }
-        setHasPermissions(true);
-      });
-      
-      return;
-    }
+
+        AppleHealthKit.initHealthKit(permissions, (error) => {
+            if (error) {
+              console.log('Error getting permissions');
+              return;
+            }
+            setHasPermissions(true);
+        });
+    })
   }, []);
 
   React.useEffect(() => {
